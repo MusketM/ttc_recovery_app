@@ -11,6 +11,14 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Rehabilitation Home'),
         backgroundColor: Colors.teal,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              // Notification action
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -18,57 +26,102 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Daily Exercises Header
               const Text(
                 'Daily Exercises',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
+
+              // Horizontal Exercise Cards with Placeholder Images
               SizedBox(
-                height: 300, // Card height
+                height: 300,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: exercises.length,
                   itemBuilder: (context, index) {
                     final exercise = exercises[index];
-                    return ExerciseCard(exercise: exercise);
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: ExerciseCard(
+                        exercise: exercise,
+                        image: const NetworkImage('https://via.placeholder.com/150'), // Replace with your asset image path
+                      ),
+                    );
                   },
                 ),
               ),
               const SizedBox(height: 20),
-              
-             
+
+              // Motivational Quote Section with Image Background
               Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
                 margin: const EdgeInsets.symmetric(vertical: 8),
-                child: const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Motivational Quote of the Day',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                child: Stack(
+                  children: [
+                    // Background Image
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        image: const DecorationImage(
+                          image: NetworkImage('https://via.placeholder.com/300x150'),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        '“The only bad workout is the one that didn’t happen.”',
-                        style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                      height: 150,
+                      width: double.infinity,
+                    ),
+                    // Motivational Text Overlay
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.black.withOpacity(0.5),
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        '- Anonymous',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Motivational Quote of the Day',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            '“The only bad workout is the one that didn’t happen.”',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            '- Anonymous',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 20),
-              
-              // Daily Progress Section
+
+              // Daily Progress Section with Progress Animation
               Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(
@@ -101,11 +154,17 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            LinearProgressIndicator(
-                              value: 0.6, // Example progress
-                              minHeight: 8,
-                              color: Colors.teal,
-                              backgroundColor: Colors.teal[50],
+                            TweenAnimationBuilder<double>(
+                              tween: Tween<double>(begin: 0, end: 0.6),
+                              duration: const Duration(seconds: 2),
+                              builder: (context, value, _) {
+                                return LinearProgressIndicator(
+                                  value: value,
+                                  minHeight: 8,
+                                  color: Colors.teal,
+                                  backgroundColor: Colors.teal[50],
+                                );
+                              },
                             ),
                             const SizedBox(height: 8),
                             const Text('60% completed today'),
@@ -117,7 +176,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // Quick Stats Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,8 +186,8 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              
-              // Tips Section
+
+              // Daily Tips Section
               const Text(
                 'Daily Tips',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -157,27 +216,30 @@ class HomePage extends StatelessWidget {
 
   // Stat card builder for Quick Stats
   Widget _buildStatCard(String title, String value, IconData icon) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Icon(icon, size: 40, color: Colors.teal),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ],
+    return Expanded(
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 40, color: Colors.teal),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                value,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
         ),
       ),
     );

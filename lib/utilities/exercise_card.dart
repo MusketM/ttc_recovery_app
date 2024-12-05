@@ -5,7 +5,7 @@ import 'package:ttc_recovery_app/model/exercise.dart';
 class ExerciseCard extends StatelessWidget {
   final Exercise exercise;
 
-  const ExerciseCard({super.key, required this.exercise});
+  const ExerciseCard({super.key, required this.exercise, required NetworkImage image});
 
   @override
   Widget build(BuildContext context) {
